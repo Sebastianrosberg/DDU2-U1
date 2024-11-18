@@ -27,41 +27,65 @@ function cityDistances() {
 
     }
 }
+
+function headColumn() {
+    for (let city of cities) {
+        let cityId = city.id
+        console.log(cityId)
+        let container = document.getElementById("table")
+        let currentId = city.id
+        let idCell = document.createElement("div")
+        container.appendChild(idCell)
+        idCell.classList.add("cell")
+        idCell.classList.add("head_column")
+        idCell.textContent = " " + currentId
+
+    }
+}
+
+
+
+
+
 let userPrompt = prompt("Skriv en stad.")
 
 function cityDistance(userPrompt) {
     for (let city of cities) {
         if (userPrompt == city.name) {
             let city_id = city.id;
-            console.log("DEN MATCHAR")
+            //console.log("DEN MATCHAR")
             for (let distance1 of distances) {
                 let city_1 = distance1.city1;
                 let city_2 = distance1.city2;
                 if (city_id == city_1 || city_2 == city_id) {
-                    console.log(true)
 
 
+
+                    //De namn som matchar ska bli svar, de städer som ligger längst ifrån och närmast ska bli en annan färg. 
+                    /*
+                        1. Jag har nu city_id:t
+                        2. Jag måste gå igenom distance
+                            2.1 Ta ut de objekten som innehåller något om den nuvarande staden
+                            2.2 Göra något med det.......
+                    */
                 }
 
             }
         }
 
-        /*
-            1. Jag har nu city_id:t
-            2. Jag måste gå igenom distance
-                2.1 Ta ut de objekten som innehåller något om den nuvarande staden
-                2.2 Göra något med det.......
-        */
 
 
     }
 }
+
+
 
 //om stadens namn går med id i distances så mät avstånd.
 
 
 cityDistance(userPrompt)
 cityNames()
+headColumn()
 cityDistances()
 
 
