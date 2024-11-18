@@ -39,6 +39,7 @@ function headColumn() {
         idCell.classList.add("cell")
         idCell.classList.add("head_column")
         idCell.textContent = " " + currentId
+        // Saknar en tom cell annars är denna funktionen klar. Tror jag.
 
     }
 }
@@ -53,15 +54,18 @@ function cityDistance(userPrompt) {
     for (let city of cities) {
         if (userPrompt == city.name) {
             let city_id = city.id;
+            let country = city.country
             //console.log("DEN MATCHAR")
             for (let distance1 of distances) {
                 let city_1 = distance1.city1;
                 let city_2 = distance1.city2;
                 if (city_id == city_1 || city_2 == city_id) {
+                    let popText = document.querySelector("h2")
+                    popText.textContent = userPrompt + " " + "(" + (country) + ")"
 
 
-
-                    //De namn som matchar ska bli svar, de städer som ligger längst ifrån och närmast ska bli en annan färg. 
+                    //De namn som matchar ska bli svart, de städer som ligger längst ifrån och närmast ska bli en annan färg. 
+                    //Text till h2 måste göras.
                     /*
                         1. Jag har nu city_id:t
                         2. Jag måste gå igenom distance
