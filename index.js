@@ -8,7 +8,7 @@ function cityNames() {
         cityContainer.appendChild(cityDiv)
         cityDiv.classList.add("cityBox")
         cityDiv.textContent = currentCityName
-
+        cityDiv.setAttribute("data-id", city.id);
         // fortsätt här
     }
 }
@@ -46,26 +46,28 @@ function headColumn() {
 
 
 
-
-
 let userPrompt = prompt("Skriv en stad.")
 
 function cityDistance(userPrompt) {
+    let found = false;
+    let popText = document.querySelector("h2")
     for (let city of cities) {
         if (userPrompt == city.name) {
             let city_id = city.id;
             let country = city.country
+            let cityName = city.name
             //console.log("DEN MATCHAR")
             for (let distance1 of distances) {
                 let city_1 = distance1.city1;
                 let city_2 = distance1.city2;
                 if (city_id == city_1 || city_2 == city_id) {
-                    let popText = document.querySelector("h2")
+
                     popText.textContent = userPrompt + " " + "(" + (country) + ")"
+                    return
 
 
                     //De namn som matchar ska bli svart, de städer som ligger längst ifrån och närmast ska bli en annan färg. 
-                    //Text till h2 måste göras.
+                    //Text till h2 måste göras i Else sats
                     /*
                         1. Jag har nu city_id:t
                         2. Jag måste gå igenom distance
@@ -76,9 +78,20 @@ function cityDistance(userPrompt) {
 
             }
         }
+    }
+    if (!found) {
+        popText.textContent = userPrompt + " finns inte i databasen";
+    }
+}
 
-
-
+function colorWhenRight(userPrompt) {
+    for (let city of cities) {
+        if (userPrompt == city.name) {
+            let cityElement = document.querySelector(`.cityBox[data-id="${city.id}"]`);
+            if (cityElement) {
+                cityElement.classList.add("target");
+            }
+        }
     }
 }
 
@@ -91,6 +104,7 @@ cityDistance(userPrompt)
 cityNames()
 headColumn()
 cityDistances()
+colorWhenRight(userPrompt)
 
 
 
@@ -99,4 +113,3 @@ cityDistances()
 // Recommended: constants with references to existing HTML-elements
 
 // Recommended: Ask for the city name and then the rest of the code
-
