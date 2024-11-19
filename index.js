@@ -53,6 +53,7 @@ function cityDistance(userPrompt) {
     let popText = document.querySelector("h2")
     for (let city of cities) {
         if (userPrompt == city.name) {
+            found = true
             let city_id = city.id;
             let country = city.country
             let cityName = city.name
@@ -95,11 +96,18 @@ function colorWhenRight(userPrompt) {
     }
 }
 
+function emptyDiv() {
+    let div = document.createElement("div")
+    let distanceContainer = document.getElementById("table")
+    distanceContainer.appendChild(div)
+    div.classList.add("cell")
+
+}
 
 
 //om stadens namn går med id i distances så mät avstånd.
 
-
+emptyDiv()
 cityDistance(userPrompt)
 cityNames()
 headColumn()
