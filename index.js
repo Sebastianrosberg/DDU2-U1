@@ -16,16 +16,18 @@ function cityNames() {
 function createTable() {
     const tableContainer = document.getElementById("table");
 
-
+    let rowIndex = -1
     for (let city1 of cities) {
+        rowIndex++;
+        const rowClass = rowIndex % 2 === 0 ? "even_row" : "";
+        console.log(rowClass)
+        tableContainer.appendChild(createCell(`${city1.id}-${city1.name}`, "head_column", rowClass));
 
-        tableContainer.appendChild(createCell(city1.name, "head_column"));
 
         for (let city2 of cities) {
 
             if (city1.id === city2.id) {
-
-                tableContainer.appendChild(createCell(""));
+                tableContainer.appendChild(createCell("", "", rowClass));
             } else {
 
                 let distanceObj = null;
@@ -44,25 +46,28 @@ function createTable() {
 
                 if (distanceObj) {
                     distance = `${distanceObj.distance / 10}`;
-                } else {
-                    distance = "N/A";
                 }
 
 
-                tableContainer.appendChild(createCell(distance));
+                tableContainer.appendChild(createCell(distance, "", rowClass));
             }
         }
     }
 }
 
 // Funktion för att skapa en cell
-function createCell(content, className = "") {
+function createCell(content, className = "", additionalClass = "") {
     const cell = document.createElement("div");
     cell.classList.add("cell");
     if (className) cell.classList.add(className);
+    if (additionalClass) cell.classList.add(additionalClass)
     cell.textContent = content;
     return cell;
 }
+
+
+
+
 
 
 
