@@ -1,5 +1,3 @@
-// Recommended: All functions declared here
-
 function cityNames() {
     for (let city of cities) {
         let cityContainer = document.getElementById("cities")
@@ -9,13 +7,12 @@ function cityNames() {
         cityDiv.classList.add("cityBox")
         cityDiv.textContent = currentCityName
         cityDiv.setAttribute("data-id", city.id);
-        // fortsätt här
     }
 }
 
 function createTable() {
     const tableContainer = document.getElementById("table");
-    let colIndex = -1
+
     let rowIndex = -1
     for (let city1 of cities) {
         let colIndex = -1
@@ -57,7 +54,6 @@ function createTable() {
     }
 }
 
-// Funktion för att skapa en cell
 function createCell(content, className = "", additionalClass = "", additionalClass1 = "") {
     const cell = document.createElement("div");
     cell.classList.add("cell");
@@ -68,47 +64,9 @@ function createCell(content, className = "", additionalClass = "", additionalCla
     return cell;
 }
 
-
-
-
-
-
-
-/*
-    1. Jag går igenom en stad i taget.
-    2. Namnen behöver finnas först
-    3. Identifiera vilken kolumn som ska vara tom (använda id? använda index?)
-    4. Jag behöver gå igenom avstånden.
-        4.1 Identifiera var stadens id finns i distances
-        4.2 Om den finns i någon av dem, så behöver jag sätta in i rätt kolumn. 
- 
-*/
-
-
-
-
-
-// distanceContainer.appendChild(distanceCell)
-// distanceCell.classList.add("cell")
-// distanceCell.textContent = currentDistance / 10
-// //console.log(currentDistance)
-
-// //komma åt city id 
-// //fortsätt här
-// for (let city of cities) {
-//     let cityid = city.id;
-//     if (cityid % 2 == 0) {
-//         console.log(`City ID ${cityid} är jämnt`);
-//         distanceCell.classList.add("even_co");
-//     }
-// }
-
-
-
 function headColumn() {
     for (let city of cities) {
         let cityId = city.id
-        //console.log(cityId)
         let container = document.getElementById("table")
         let currentId = city.id
         let idCell = document.createElement("div")
@@ -116,36 +74,36 @@ function headColumn() {
         idCell.classList.add("cell")
         idCell.classList.add("head_column")
         idCell.textContent = " " + currentId
-        // Saknar en tom cell annars är denna funktionen klar. Tror jag.
+
 
     }
 }
 
-
-
-
 function cityDistance(userPrompt) {
-    let found = false; // Används för att kontrollera om staden hittades
+    let found = false;
     let popText = document.querySelector("h2");
+    let titleText = document.querySelector("title")
 
     for (let city of cities) {
         if (userPrompt === city.name) {
-            found = true; // Staden hittades
+            found = true;
             let cityId = city.id;
             let country = city.country;
 
-            // Visa information om staden
-            popText.textContent = `${userPrompt} (${country})`;
 
-            // Färga närmaste och längsta städer
+            popText.textContent = `${userPrompt} (${country})`;
+            titleText.textContent = `${userPrompt}`
+
+
             highlightClosestAndFarthest(cityId);
-            return; // Avsluta funktionen när staden hittas
+            return;
         }
     }
 
-    // Om staden inte hittades, visa felmeddelande
     if (!found) {
         popText.textContent = `${userPrompt} finns inte i databasen`;
+        titleText.textContent = `Not Found`
+
     }
 }
 
@@ -167,41 +125,39 @@ function emptyDiv() {
     div.classList.add("cell")
 }
 
-
-// Här ör ny kod
-
 function highlightClosestAndFarthest(cityId) {
-    // Rensa tidigare markeringar
-    const allCityElements = document.querySelectorAll(".cityBox");
+    let allCityElements = document.querySelectorAll(".cityBox");
     for (let i = 0; i < allCityElements.length; i++) {
         const element = allCityElements[i];
         element.classList.remove("closest", "furthest");
-        element.textContent = element.textContent.replace(/ ligger \d+ mil bort/, ""); // Ta bort avståndstext
+        element.textContent = element.textContent.replace(/ ligger \d+ mil bort/, "");
     }
 
-    // Hitta närmaste och längsta städer
-    const { closest, farthest } = findClosestAndFarthestCity(cityId);
+    let { closest, farthest } = findClosestAndFarthestCity(cityId);
 
-    // Färga och uppdatera text för den närmaste staden
+
     if (closest) {
-        const closestCityElement = document.querySelector(`.cityBox[data-id="${closest.id}"]`);
+        let closestCityElement = document.querySelector(`.cityBox[data-id="${closest.id}"]`);
         if (closestCityElement) {
             closestCityElement.classList.add("closest");
             closestCityElement.textContent += ` ligger ${closest.distance / 10} mil bort`;
         }
+
+        let closestSpan = document.getElementById("closest");
+        closestSpan.textContent = closestCityElement.textContent.split(" ligger")[0];
     }
 
-    // Färga och uppdatera text för den längsta staden
     if (farthest) {
-        const furthestCityElement = document.querySelector(`.cityBox[data-id="${farthest.id}"]`);
+        let furthestCityElement = document.querySelector(`.cityBox[data-id="${farthest.id}"]`);
         if (furthestCityElement) {
             furthestCityElement.classList.add("furthest");
             furthestCityElement.textContent += ` ligger ${farthest.distance / 10} mil bort`;
         }
+
+        let furthestSpan = document.getElementById("furthest");
+        furthestSpan.textContent = furthestCityElement.textContent.split(" ligger")[0];
     }
 }
-
-
 
 function findClosestAndFarthestCity(cityId) {
     let closest = null;
@@ -211,15 +167,13 @@ function findClosestAndFarthestCity(cityId) {
 
     for (let distance of distances) {
         if (distance.city1 === cityId || distance.city2 === cityId) {
-            const otherCityId = distance.city1 === cityId ? distance.city2 : distance.city1;
+            let otherCityId = distance.city1 === cityId ? distance.city2 : distance.city1;
 
-            // Uppdatera närmaste stad
             if (distance.distance < closestDistance) {
                 closestDistance = distance.distance;
                 closest = { id: otherCityId, distance: closestDistance };
             }
 
-            // Uppdatera längsta stad
             if (distance.distance > farthestDistance) {
                 farthestDistance = distance.distance;
                 farthest = { id: otherCityId, distance: farthestDistance };
@@ -230,35 +184,6 @@ function findClosestAndFarthestCity(cityId) {
     return { closest, farthest };
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//om stadens namn går med id i distances så mät avstånd.
 cityNames()
 emptyDiv()
 headColumn()
@@ -266,12 +191,4 @@ createTable()
 let userPrompt = prompt("Skriv en stad.")
 cityDistance(userPrompt)
 colorWhenRight(userPrompt)
-titleDecider(userPrompt)
 
-
-
-
-
-// Recommended: constants with references to existing HTML-elements
-
-// Recommended: Ask for the city name and then the rest of the code
