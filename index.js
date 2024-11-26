@@ -27,10 +27,10 @@ function createTable() {
 
         for (let city2 of cities) {
             colIndex++;
-            let colClass = ""; // Standardvärde
+            let colClass = "";
 
             if (colIndex % 2 === 0) {
-                colClass = "even_col"; // Sätt "even_col" för jämna kolumner
+                colClass = "even_col";
             }
             if (city1.id === city2.id) {
                 tableContainer.appendChild(createCell("", rowClass, colClass));
@@ -91,7 +91,7 @@ function cityDistance(userPrompt) {
 
 
             popText.textContent = `${userPrompt} (${country})`;
-            titleText.textContent = `${userPrompt}`
+            titleText.textContent = `${userPrompt}`;
 
 
             textAndColor(cityId);
