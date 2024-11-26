@@ -17,13 +17,21 @@ function createTable() {
     for (let city1 of cities) {
         let colIndex = -1;
         rowIndex++;
-        const rowClass = rowIndex % 2 === 0 ? "even_row" : "";
+        let rowClass = "";
+
+        if (rowIndex % 2 === 0) {
+            rowClass = "even_row";
+        }
         tableContainer.appendChild(createCell(`${city1.id}-${city1.name}`, "head_column", rowClass));
 
 
         for (let city2 of cities) {
             colIndex++;
-            const colClass = colIndex % 2 === 0 ? "even_col" : "";
+            let colClass = ""; // Standardvärde
+
+            if (colIndex % 2 === 0) {
+                colClass = "even_col"; // Sätt "even_col" för jämna kolumner
+            }
             if (city1.id === city2.id) {
                 tableContainer.appendChild(createCell("", rowClass, colClass));
             } else {
