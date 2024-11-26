@@ -1,11 +1,11 @@
 function cityNames() {
     for (let city of cities) {
-        let cityContainer = document.getElementById("cities")
-        let currentCityName = city.name
-        let cityDiv = document.createElement("div")
-        cityContainer.appendChild(cityDiv)
-        cityDiv.classList.add("cityBox")
-        cityDiv.textContent = currentCityName
+        let cityContainer = document.getElementById("cities");
+        let currentCityName = city.name;
+        let cityDiv = document.createElement("div");
+        cityContainer.appendChild(cityDiv);
+        cityDiv.classList.add("cityBox");
+        cityDiv.textContent = currentCityName;
         cityDiv.setAttribute("data-id", city.id);
     }
 }
@@ -15,15 +15,14 @@ function createTable() {
 
     let rowIndex = -1
     for (let city1 of cities) {
-        let colIndex = -1
+        let colIndex = -1;
         rowIndex++;
         const rowClass = rowIndex % 2 === 0 ? "even_row" : "";
-        console.log(rowClass)
         tableContainer.appendChild(createCell(`${city1.id}-${city1.name}`, "head_column", rowClass));
 
 
         for (let city2 of cities) {
-            colIndex++
+            colIndex++;
             const colClass = colIndex % 2 === 0 ? "even_col" : "";
             if (city1.id === city2.id) {
                 tableContainer.appendChild(createCell("", rowClass, colClass));
@@ -58,14 +57,14 @@ function createCell(content, className = "", additionalClass = "", additionalCla
 
 function headColumn() {
     for (let city of cities) {
-        let cityId = city.id
-        let container = document.getElementById("table")
-        let currentId = city.id
-        let idCell = document.createElement("div")
-        container.appendChild(idCell)
-        idCell.classList.add("cell")
-        idCell.classList.add("head_column")
-        idCell.textContent = " " + currentId
+        let cityId = city.id;
+        let container = document.getElementById("table");
+        let currentId = city.id;
+        let idCell = document.createElement("div");
+        container.appendChild(idCell);
+        idCell.classList.add("cell");
+        idCell.classList.add("head_column");
+        idCell.textContent = " " + currentId;
 
 
     }
@@ -87,14 +86,18 @@ function cityDistance(userPrompt) {
             titleText.textContent = `${userPrompt}`
 
 
-            highlightClosestAndFarthest(cityId);
+            textAndColor(cityId);
             return;
         }
     }
 
     if (!found) {
         popText.textContent = `${userPrompt} finns inte i databasen`;
-        titleText.textContent = `Not Found`
+        titleText.textContent = `Not Found`;
+        const h3Element = document.querySelector("h3");
+        if (h3Element) {
+            h3Element.style.display = "none";
+        }
 
     }
 }
@@ -111,10 +114,10 @@ function colorWhenRight(userPrompt) {
 }
 
 function emptyDiv() {
-    let div = document.createElement("div")
-    let distanceContainer = document.getElementById("table")
-    distanceContainer.appendChild(div)
-    div.classList.add("cell")
+    let div = document.createElement("div");
+    let distanceContainer = document.getElementById("table");
+    distanceContainer.appendChild(div);
+    div.classList.add("cell");
 }
 
 function textAndColor(cityId) {
