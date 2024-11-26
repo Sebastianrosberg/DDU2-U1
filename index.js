@@ -26,28 +26,20 @@ function createTable() {
             colIndex++
             const colClass = colIndex % 2 === 0 ? "even_col" : "";
             if (city1.id === city2.id) {
-                tableContainer.appendChild(createCell("", "", rowClass, colClass));
+                tableContainer.appendChild(createCell("", rowClass, colClass));
             } else {
-
                 let distanceObj = null;
-
                 for (let d of distances) {
                     if ((d.city1 === city1.id && d.city2 === city2.id) ||
                         (d.city1 === city2.id && d.city2 === city1.id)) {
                         distanceObj = d;
                         break;
                     }
-
-
                 }
-
                 let distance;
-
                 if (distanceObj) {
                     distance = `${distanceObj.distance / 10}`;
                 }
-
-
                 tableContainer.appendChild(createCell(distance, "", rowClass, colClass));
             }
         }
@@ -125,7 +117,7 @@ function emptyDiv() {
     div.classList.add("cell")
 }
 
-function highlightClosestAndFarthest(cityId) {
+function textAndColor(cityId) {
     let allCityElements = document.querySelectorAll(".cityBox");
     for (let i = 0; i < allCityElements.length; i++) {
         const element = allCityElements[i];
@@ -133,7 +125,7 @@ function highlightClosestAndFarthest(cityId) {
         element.textContent = element.textContent.replace(/ ligger \d+ mil bort/, "");
     }
 
-    let { closest, farthest } = findClosestAndFarthestCity(cityId);
+    let { closest, farthest } = findCloseAndFar(cityId);
 
 
     if (closest) {
@@ -159,7 +151,7 @@ function highlightClosestAndFarthest(cityId) {
     }
 }
 
-function findClosestAndFarthestCity(cityId) {
+function findCloseAndFar(cityId) {
     let closest = null;
     let farthest = null;
     let closestDistance = Infinity;
