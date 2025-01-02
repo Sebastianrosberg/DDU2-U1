@@ -1,197 +1,162 @@
-function cityNames() {
+"use strict"
+
+const citiesDiv = document.getElementById("cities");
+let secondHeader = document.querySelector("h2")
+let userPrompt = prompt("Hej, skriv sen stad")
+const spanFurthest = document.getElementById("furthest")
+const spanClosest = document.getElementById("closest")
+const table = document.getElementById("table");
+const title = document.querySelector("title")
+
+
+function secondHeaderGetCityName(cityName) {
     for (let city of cities) {
-        let cityContainer = document.getElementById("cities");
-        let currentCityName = city.name;
-        let cityDiv = document.createElement("div");
-        cityContainer.appendChild(cityDiv);
-        cityDiv.classList.add("cityBox");
-        cityDiv.textContent = currentCityName;
-        cityDiv.setAttribute("data-id", city.id);
+
+        if (cityName == city.name) {
+
+            secondHeader.textContent = `${city.name} (${city.country})`;
+            title.textContent = city.name;
+            findClosestAndFurthestCity(cityName)
+            return
+        }
     }
+    title.textContent = "Not found";
+    secondHeader.textContent = `${userPrompt} finns inte i databasen`;
+    document.querySelector("h3").textContent = "";
 }
 
-function createTable() {
-    const tableContainer = document.getElementById("table");
+function findClosestAndFurthestCity(cityName) {
+    let furthestDistance = -Infinity;
+    let closestDistance = Infinity;
+    let furthestCityId = 0;
+    let closestCityId = 0;
+    let furthestCityName = "";
+    let closestCityName = "";
 
-    let rowIndex = -1
-    for (let city1 of cities) {
-        let colIndex = -1;
-        rowIndex++;
-        let rowClass = "";
+    for (let city of cities) {
 
-        if (rowIndex % 2 === 0) {
-            rowClass = "even_row";
-        }
-        tableContainer.appendChild(createCell(`${city1.id}-${city1.name}`, "head_column", rowClass));
+        if (cityName == city.name) {
 
+            for (let distance of distances) {
 
-        for (let city2 of cities) {
-            colIndex++;
-            let colClass = "";
+                if (city.id == distance.city1 || city.id == distance.city2) {
+                    if (distance.distance > furthestDistance) {
+                        furthestDistance = distance.distance;
+                        if (city.id == distance.city1) {
+                            furthestCityId = distance.city2;
 
-            if (colIndex % 2 === 0) {
-                colClass = "even_col";
-            }
-            if (city1.id === city2.id) {
-                tableContainer.appendChild(createCell("", rowClass, colClass));
-            } else {
-                let distanceObj = null;
-                for (let d of distances) {
-                    if ((d.city1 === city1.id && d.city2 === city2.id) ||
-                        (d.city1 === city2.id && d.city2 === city1.id)) {
-                        distanceObj = d;
-                        break;
+                        } else if (city.id == distance.city2) {
+                            furthestCityId = distance.city1;
+
+                        }
+                    }
+                    if (distance.distance < closestDistance) {
+                        closestDistance = distance.distance;
+                        if (city.id == distance.city1) {
+                            closestCityId = distance.city2;
+                        } else if (city.id == distance.city2) {
+                            closestCityId = distance.city1;
+
+                        }
                     }
                 }
-                let distance;
-                if (distanceObj) {
-                    distance = `${distanceObj.distance / 10}`;
+            }
+        }
+    }
+
+    for (let city of cities) {
+        if (furthestCityId == city.id) {
+            furthestCityName = city.name
+            spanFurthest.textContent = furthestCityName;
+        }
+        if (closestCityId == city.id) {
+            closestCityName = city.name;
+            spanClosest.textContent = closestCityName;
+        }
+    }
+
+
+
+    for (let cityDivs of document.querySelectorAll("#cities div")) {
+        if (cityDivs.textContent == furthestCityName) {
+            cityDivs.classList.add("furthest")
+            cityDivs.textContent += ` ligger ${furthestDistance / 10} mil bort`
+        }
+        if (cityDivs.textContent == closestCityName) {
+            cityDivs.classList.add("closest");
+            cityDivs.textContent += ` ligger ${closestDistance / 10} mil bort`
+        }
+        if (cityName == cityDivs.textContent) {
+            cityDivs.classList.add("target")
+        }
+    }
+}
+
+// cityBoxes
+for (let city of cities) {
+    const cityBoxes = document.createElement("div");
+    citiesDiv.appendChild(cityBoxes);
+    cityBoxes.classList.add("cityBox")
+    cityBoxes.textContent = city.name;
+}
+//
+
+
+//Table
+const emptyDiv = document.createElement("div")
+emptyDiv.classList.add("cell")
+table.appendChild(emptyDiv)
+
+for (let city of cities) {
+    const topRowDivs = document.createElement("div")
+    topRowDivs.classList.add("head_row");
+    topRowDivs.classList.add("cell");
+    topRowDivs.textContent = city.id;
+    table.appendChild(topRowDivs);
+}
+
+for (let city of cities) {
+
+    const cityNameDiv = document.createElement("div");
+    cityNameDiv.classList.add("head_column");
+    cityNameDiv.classList.add("cell")
+    table.appendChild(cityNameDiv);
+    cityNameDiv.textContent = `${city.id}-${city.name}`;
+    if (city.id % 2 == 0) {
+        cityNameDiv.classList.add("even_row")
+    }
+
+    for (let compareCity of cities) {
+
+        if (city.id == compareCity.id) {
+            const tableEmptyDiv = document.createElement("div")
+            tableEmptyDiv.classList.add("cell")
+            table.appendChild(tableEmptyDiv)
+            if (compareCity.id % 2 == 0) {
+                tableEmptyDiv.classList.add("even_col")
+            }
+            if (city.id % 2 == 0) {
+                tableEmptyDiv.classList.add("even_row")
+            }
+        }
+
+        for (let distance of distances) {
+            if (city.id == distance.city1 && compareCity.id == distance.city2
+                || compareCity.id == distance.city1 && city.id == distance.city2) {
+                const distanceDivs = document.createElement("div");
+                distanceDivs.classList.add("cell");
+                table.appendChild(distanceDivs);
+                distanceDivs.textContent = distance.distance / 10;
+                if (compareCity.id % 2 == 0) {
+                    distanceDivs.classList.add("even_col")
                 }
-                tableContainer.appendChild(createCell(distance, "", rowClass, colClass));
+                if (city.id % 2 == 0) {
+                    distanceDivs.classList.add("even_row")
+                }
             }
         }
     }
 }
 
-function createCell(content, className = "", additionalClass = "", additionalClass1 = "") {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-    if (className) cell.classList.add(className);
-    if (additionalClass) cell.classList.add(additionalClass);
-    if (additionalClass1) cell.classList.add(additionalClass1)
-    cell.textContent = content;
-    return cell;
-}
-
-function headColumn() {
-    for (let city of cities) {
-        let cityId = city.id;
-        let container = document.getElementById("table");
-        let currentId = city.id;
-        let idCell = document.createElement("div");
-        container.appendChild(idCell);
-        idCell.classList.add("cell");
-        idCell.classList.add("head_column");
-        idCell.textContent = " " + currentId;
-
-
-    }
-}
-
-function cityDistance(userPrompt) {
-    let found = false;
-    let popText = document.querySelector("h2");
-    let titleText = document.querySelector("title")
-
-    for (let city of cities) {
-        if (userPrompt === city.name) {
-            found = true;
-            let cityId = city.id;
-            let country = city.country;
-
-
-            popText.textContent = `${userPrompt} (${country})`;
-            titleText.textContent = `${userPrompt}`;
-
-
-            textAndColor(cityId);
-            return;
-        }
-    }
-
-    if (!found) {
-        popText.textContent = `${userPrompt} finns inte i databasen`;
-        titleText.textContent = `Not Found`;
-        const h3Element = document.querySelector("h3");
-        if (h3Element) {
-            h3Element.style.display = "none";
-        }
-
-    }
-}
-
-function colorWhenRight(userPrompt) {
-    for (let city of cities) {
-        if (userPrompt == city.name) {
-            let cityElement = document.querySelector(`.cityBox[data-id="${city.id}"]`);
-            if (cityElement) {
-                cityElement.classList.add("target");
-            }
-        }
-    }
-}
-
-function emptyDiv() {
-    let div = document.createElement("div");
-    let distanceContainer = document.getElementById("table");
-    distanceContainer.appendChild(div);
-    div.classList.add("cell");
-}
-
-function textAndColor(cityId) {
-    let allCityElements = document.querySelectorAll(".cityBox");
-    for (let i = 0; i < allCityElements.length; i++) {
-        const element = allCityElements[i];
-        element.classList.remove("closest", "furthest");
-        element.textContent = element.textContent.replace(/ ligger \d+ mil bort/, "");
-    }
-
-    let { closest, farthest } = findCloseAndFar(cityId);
-
-
-    if (closest) {
-        let closestCityElement = document.querySelector(`.cityBox[data-id="${closest.id}"]`);
-        if (closestCityElement) {
-            closestCityElement.classList.add("closest");
-            closestCityElement.textContent += ` ligger ${closest.distance / 10} mil bort`;
-        }
-
-        let closestSpan = document.getElementById("closest");
-        closestSpan.textContent = closestCityElement.textContent.split(" ligger")[0];
-    }
-
-    if (farthest) {
-        let furthestCityElement = document.querySelector(`.cityBox[data-id="${farthest.id}"]`);
-        if (furthestCityElement) {
-            furthestCityElement.classList.add("furthest");
-            furthestCityElement.textContent += ` ligger ${farthest.distance / 10} mil bort`;
-        }
-
-        let furthestSpan = document.getElementById("furthest");
-        furthestSpan.textContent = furthestCityElement.textContent.split(" ligger")[0];
-    }
-}
-
-function findCloseAndFar(cityId) {
-    let closest = null;
-    let farthest = null;
-    let closestDistance = Infinity;
-    let farthestDistance = -Infinity;
-
-    for (let distance of distances) {
-        if (distance.city1 === cityId || distance.city2 === cityId) {
-            let otherCityId = distance.city1 === cityId ? distance.city2 : distance.city1;
-
-            if (distance.distance < closestDistance) {
-                closestDistance = distance.distance;
-                closest = { id: otherCityId, distance: closestDistance };
-            }
-
-            if (distance.distance > farthestDistance) {
-                farthestDistance = distance.distance;
-                farthest = { id: otherCityId, distance: farthestDistance };
-            }
-        }
-    }
-
-    return { closest, farthest };
-}
-
-cityNames()
-emptyDiv()
-headColumn()
-createTable()
-let userPrompt = prompt("Skriv en stad.")
-cityDistance(userPrompt)
-colorWhenRight(userPrompt)
-
+//Funktions anrop
+secondHeaderGetCityName(userPrompt)
